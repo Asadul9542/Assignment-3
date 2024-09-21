@@ -1,0 +1,159 @@
+---
+title: "Week 3 Assignment"
+author: "Md Asadul Islam"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+library(tibble)
+```
+
+### 1. Normalization
+
+Here I have three tables which demonstrate UNF, INF, 2NF and 3NF.
+
+```{r code-chunk-label}
+# Unnormalized Data (UNF)
+unnormalized_data <- tibble(
+  EmployeeID = c(1, 2, 3, 4),
+  Name = c("Alice", "Bob", "Yvonne", "Emily"),
+  Department = c("HR", "Finance", "IT", "Management"),
+  Projects = c("Recruitment, Payroll", "Budgeting, Forecasting", "Software, database", "Commissioning, Opening"),
+  Skills = c("Communication, Management", "Analysis, Excel", "Development, testing", "Resource, Planning")
+)
+
+print(unnormalized_data)
+
+```
+
+1NF
+```{r chnuk code for 1NF}
+# Data in First Normal form (1NF) 
+
+first_normal_form <- tibble(
+  EmployeeID = c(1, 1, 2, 2, 3, 3, 4, 4),
+  Name = c("Alice", "Alice", "Bob", "Bob", "Yvonne", "Yvonne", "Emily", "Emily"),
+  Department = c("HR", "HR", "Finance", "Finance", "IT", "IT", "Management", "Management"),
+  Project = c("Recruitment", "Payroll", "Budgeting", "Forecasting", "Software", "Database", "Commissioning", "Opening"),
+  Skill = c("Communication", "Management", "Analysis", "Excel", "Development", "Testing", "Resource", "Planning")
+)
+
+print(first_normal_form)
+
+
+
+```
+
+2NF
+
+```{R chunk code for 2NF}
+
+# Create Employee-Department table
+employee_department <- tibble(
+  EmployeeID = c(1, 2, 3, 4),
+  Name = c("Alice", "Bob", "Yvonne", "Emily"),
+  Department = c("HR", "Finance", "IT", "Management")
+)
+
+# Create Employee-Project table
+employee_project <- tibble(
+  EmployeeID = c(1, 1, 2, 2, 3, 3, 4, 4),
+  Project = c("Recruitment", "Payroll", "Budgeting", "Forecasting", "Software", "Database", "Comissioning", "Opening")
+)
+
+# Create Employee-Skill table
+employee_skill <- tibble(
+  EmployeeID = c(1, 1, 2, 2, 3, 3, 4, 4),
+  Skill = c("Communication", "Management", "Analysis", "Excel", "Development", "Testing", "Resource", "Planning")
+)
+
+print(employee_department)
+print(employee_project)
+print(employee_skill)
+
+```
+3NF
+```{r chunk code for 3NF}
+# Create Employee table
+employee <- tibble(
+  EmployeeID = c(1, 2, 3, 4),
+  Name = c("Alice", "Bob", "Yvonne", "Emily")
+)
+
+# Create Department table
+department <- tibble(
+  EmployeeID = c(1, 2, 3, 4),
+  Department = c("HR", "Finance", "IT", "Management")
+)
+
+# Create Project table
+project <- tibble(
+  EmployeeID = c(1, 1, 2, 2, 3, 3, 4, 4),
+  Project = c("Recruitment", "Payroll", "Budgeting", "Forecasting", "Software", "Database", "Commissioning", "Opening")
+)
+
+# Create Skill table
+skill <- tibble(
+  EmployeeID = c(1, 1, 2, 2, 3, 3, 4, 4),
+  Skill = c("Communication", "Management", "Analysis", "Excel", "Development", "Testing", "Resource", "Planning")
+)
+
+print(employee)
+print(department)
+print(project)
+print(skill)
+
+
+```
+
+### 2. Character Manipulation
+
+Identifying majors that contain either "DATA" or "STATISTICS"
+
+```{r code chunk for identifying majors}
+
+# Install and load necessary packages
+library(dplyr)
+library(stringr)
+
+# Load the dataset from the url given
+url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/majors-list.csv"
+majors_data <- read.csv(url)
+
+# Display the first few rows of the dataset to understand its structure 
+head(majors_data)
+
+# Filter majors that contain either "DATA" or "STATISTICS" as requested
+filtered_majors <- majors_data %>%
+  filter(str_detect(Major, "DATA|STATISTICS"))
+
+# Display the filtered majors based on the above criteria
+print(filtered_majors)
+
+```
+### 3. Describe, in words, what these expressions will match:
+
+(.)\1\1: This expression matches any character that appears three times in a row\n
+
+"(.)(.)\\2\\1":  This expression matches a four-character string where the first two characters are mirrored by the second two characters in reverse order.\n
+
+(..)\1: This expression matches any four-character string where the first two characters are repeated.\n
+
+"(.).\\1.\\1": This expression matches any five-character string where the first, third, and fifth characters are the same, and the second and fourth characters can be any character.\n
+
+"(.)(.)(.).*\\3\\2\\1" : This expression matches any string where three consecutive characters are followed somewhere later in the string (not necessarily immediately) by those three characters in reverse order.\n
+
+### 4. Construct regular expressions to match words that:
+
+Start and end with the same character: \n
+^(.)\1.*\1$
+
+Contain a repeated pair of letters (e.g. "church" contains "ch" repeated twice.):\n
+(\w\w).*\1
+
+Contain one letter repeated in at least three places (e.g. "eleven" contains three "e"s.):\n
+(.*(.).*\2.*\2.*)
+
